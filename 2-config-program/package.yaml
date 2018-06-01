@@ -1,9 +1,17 @@
 name: config-program
 dependencies:
 - base
+- rio
+
+# configuration
 - etc
 - file-embed
-- rio
+- aeson
+
+# database
+- persistent-postgresql
+- persistent-template
+- resource-pool
 executables:
   config-program:
     source-dirs: app
