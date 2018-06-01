@@ -1,0 +1,830 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<title>Rock-Solid Haskell Services</title>
+<meta name="author" content="(Roman Gonzalez)"/>
+<style type="text/css">
+.underline { text-decoration: underline; }
+</style>
+<link rel="stylesheet" href="./reveal.js/css/reveal.css"/>
+
+<link rel="stylesheet" href="./reveal.js/css/theme/black.css" id="theme"/>
+
+<link rel="stylesheet" href="https://s3.amazonaws.com/static.slid.es/fonts/overpass2/overpass2.css"/>
+
+<link rel="stylesheet" href="./slides.css"/>
+<link rel="stylesheet" href="./reveal.js/lib/css/zenburn.css"/>
+<!-- If the query includes 'print-pdf', include the PDF print sheet -->
+<script>
+    if( window.location.search.match( /print-pdf/gi ) ) {
+        var link = document.createElement( 'link' );
+        link.rel = 'stylesheet';
+        link.type = 'text/css';
+        link.href = './reveal.js/css/print/pdf.css';
+        document.getElementsByTagName( 'head' )[0].appendChild( link );
+    }
+</script>
+</head>
+<body>
+<div class="reveal">
+<div class="slides">
+<section>
+<section id="slide-org6dbe932">
+<h2 id="org6dbe932">Rock-Solid Haskell Services</h2>
+<h4 class="sub-title">LambdaConf 2018 - Boulder, CO</h4>
+<p class="author"><a href="https://twitter.com/romanandreg">Roman Gonzalez</a></p>
+<p class="author"><a href="https://github.com/roman/lc-2018-rock-solid-haskell">https://github.com/roman/lc-2018-rock-solid-haskell</a></p>
+</section>
+</section>
+<section>
+<section id="slide-org8265f67">
+<h2 id="org8265f67">Agenda</h2>
+<ul>
+<li class="fragment fade-in">Introduction/Setup</li>
+<li class="fragment fade-in">Start with a solid foundation (Custom Prelude)</li>
+<li class="fragment fade-in">Standarizing your team workflow</li>
+<li class="fragment fade-in">Managing configuration values succintly</li>
+<li class="fragment fade-in">Define your application in layers</li>
+<li class="fragment fade-in">Model sensitive components as reliable processes</li>
+<li class="fragment fade-in">Dealing with flaky integration points</li>
+<li class="fragment fade-in">AWS in your box</li>
+<li class="fragment fade-in">Adding chaos to the mix</li>
+
+</ul>
+
+<aside class="notes">
+<p>
+
+</p>
+
+<p>
+BLOCK (2 HOURS)
+</p>
+<ul>
+<li>Introduction/Setup (15 minutes)</li>
+<li>Start with a solid foundation (Custom Prelude)
+<ul>
+<li>slides and github (15 minutes)</li>
+<li>build a small application using RIO Logger (Guided: 10 minutes)</li>
+<li>build a small CLI application (Not Guided: 15 minutes) &lt;- WHAT TO DO? NOT SURE YET</li>
+
+</ul></li>
+
+</ul>
+
+<p>
+&#x2014; BREAK
+</p>
+
+<ul>
+<li>Standarizing your workflow as a team
+<ul>
+<li>Installing tooling (brittany, stylish-haskell, hlint, ghcid)</li>
+<li>Slides on tools and code around Makefiles (20 minutes)</li>
+
+</ul></li>
+
+</ul>
+
+<p>
+&#x2013; BREAK
+</p>
+
+<p>
+BLOCK (2 HOURS)
+</p>
+
+<ul>
+<li>Managing configuration values succintly
+<ul>
+<li>slides (10 minutes)</li>
+<li>overview of <code>etc</code> (Guided: 15 minutes)</li>
+<li>challenge: extend previous CLI application with config value from different
+sources (20 minutes)</li>
+
+</ul></li>
+
+<li>Define your application in layers
+<ul>
+<li>slides (10 minutes)</li>
+<li>overview of <code>componentm</code> (Guided: 10 minutes)</li>
+<li>challenge: add Sqlite Database to CLI application</li>
+
+</ul></li>
+
+<li>Model sensitive components as reliable processes</li>
+
+</ul>
+
+<p>
+&#x2013; BREAK
+</p>
+
+<p>
+BLOCK (2 HOURS)
+</p>
+
+<ul>
+<li>AWS in your own box</li>
+<li>Dealing with flaky integration points</li>
+<li>Adding chaos to the mix</li>
+
+</ul>
+
+</aside>
+</section>
+</section>
+<section>
+<section id="slide-org1500355">
+<h2 id="org1500355">Introduction/Setup</h2>
+<ul>
+<li>Install <a href="https://docs.haskellstack.org/en/stable/install_and_upgrade/">stack</a> or <a href="https://www.haskell.org/cabal/download.html">cabal</a></li>
+<li><a href="https://github.com/Shopify/toxiproxy/releases/tag/v2.1.3">Clone</a> project repository</li>
+<li><a href="https://github.com/Shopify/toxiproxy/releases/tag/v2.1.3">Download</a> toxiproxy-cli and toxiproxy-server</li>
+<li><a href="https://docs.docker.com/install/">Install</a> docker</li>
+
+</ul>
+
+</section>
+</section>
+<section>
+<section id="slide-org466c09d">
+<h2 id="org466c09d">Start with a solid foundation</h2>
+<div class="outline-text-2" id="text-org466c09d">
+</div>
+</section>
+<section id="slide-org662d635">
+<h3 id="org662d635">Why go with a custom <code>Prelude</code>?</h3>
+<ul>
+<li class="fragment fade-in">Most production Haskell code is built over a set of well known libraries
+(<code>bytestring</code>, <code>text</code>, <code>deepseq</code>, etc.)</li>
+
+<li class="fragment fade-in">Defaults allow developers to use dangerous APIs that are partial
+(e.g. <code>head</code>, <code>tail</code>, etc.)</li>
+
+<li class="fragment fade-in">Defaults use non-performant data structures (e.g. <code>List</code>, <code>String</code>) by
+default</li>
+
+</ul>
+
+</section>
+<section id="slide-org028add7">
+<h3 id="org028add7">What options are available?</h3>
+<ul>
+<li>The ones I would recommend are <a href="https://github.com/commercialhaskell/rio"><code>rio</code></a> or <a href="https://github.com/sdiehl/protolude"><code>protolude</code></a></li>
+<li>This workshop will use the <code>rio</code> package</li>
+
+</ul>
+
+</section>
+<section id="slide-org23e1dd6">
+<h3 id="org23e1dd6">Getting started with RIO</h3>
+<p>
+Go to project <code>1-small-program</code> in the workshop repository
+</p>
+
+<aside class="notes">
+<p>
+Go through source code, implement a small program that logs stuff
+</p>
+
+</aside>
+
+</section>
+<section id="slide-orgaeea94a">
+<h3 id="orgaeea94a">Implement a small program using RIO</h3>
+
+</section>
+</section>
+<section>
+<section id="slide-org90e1691">
+<h2 id="org90e1691">Standarizing your team workflow</h2>
+<div class="outline-text-2" id="text-org90e1691">
+</div>
+</section>
+<section id="slide-orgc2bec8a">
+<h3 id="orgc2bec8a">Why to standarize: A tale about CI breakages</h3>
+</section>
+<section id="slide-org73645c7">
+<h3 id="org73645c7">Makefiles</h3>
+<aside class="notes">
+<p>
+Go to Haskell-capataz to showcase how to use a setup
+</p>
+
+</aside>
+</section>
+<section id="slide-orgfb988bc">
+<h3 id="orgfb988bc">A set of tools to keep code tidy</h3>
+<ul>
+<li>hlint</li>
+<li>refactor</li>
+<li>stylish-haskell</li>
+<li>brittany or hindent</li>
+<li><code>stack install hlint refactor stylish-haskell brittany</code></li>
+
+</ul>
+<aside class="notes">
+<p>
+Showcase make/tools
+</p>
+
+</aside>
+</section>
+<section id="slide-org1bc84f7">
+<h3 id="org1bc84f7"><a id="ID-33bc9bce-064c-48a0-9075-2574b1868060"></a>Fast development using ghcid</h3>
+<div class="org-src-container">
+
+<pre><code class="shell" >make -f make/dev ghcid
+</code></pre>
+</div>
+
+</section>
+</section>
+<section>
+<section id="slide-orgc17793d">
+<h2 id="orgc17793d">BREAK</h2>
+</section>
+</section>
+<section>
+<section id="slide-org4dc1936">
+<h2 id="org4dc1936">Managing configuration values succintly</h2>
+<div class="outline-text-2" id="text-org4dc1936">
+</div>
+</section>
+<section id="slide-org2595c3d">
+<h3 id="org2595c3d">12Factor</h3>
+<p>
+Ideally you want your application to follow a 12factor mantra
+</p>
+
+<blockquote nil>
+<p>
+Strict separation of config from code
+</p>
+</blockquote>
+
+<p>
+Configuration varies substantially across deploys, code <b>does not</b>
+</p>
+
+</section>
+<section id="slide-orge0eb9c1">
+<h3 id="orge0eb9c1">Strategies to Config</h3>
+<ul>
+<li>Configuration File(s)</li>
+<li>Environment Variables</li>
+<li>CLI options</li>
+
+</ul>
+
+<p>
+Should we pick one, or should we use more than one approach?
+</p>
+<aside class="notes">
+<p>
+Point detriments of each of the approaches
+</p>
+
+<ul>
+<li>files:
+<ul>
+<li>You can accidently checkin configuration files</li>
+<li>Discuss also how arbitrary it is model your software by environments (rails style)</li>
+
+</ul></li>
+
+<li>env vars:
+<ul>
+<li>You then have many different environment variables to tweak</li>
+<li>THE WORST: You perform IO in the middle of your business logic to gather a config value</li>
+
+</ul></li>
+
+<li>cli:
+<ul>
+<li>You have N+1 options to pass to a CLI, development time sucks</li>
+
+</ul></li>
+
+</ul>
+
+</aside>
+</section>
+<section id="slide-org2fab99b">
+<h3 id="org2fab99b">Managing Application Config with <code>etc</code></h3>
+<ul>
+<li class="fragment fade-in">Supports configuration files, environment variables and CLI options</li>
+
+<li class="fragment fade-in">Defines a spec for all your application settings (one canonical location
+for all config related decissions)</li>
+
+<li class="fragment fade-in">Merges configuration values from <span class="underline">all</span> sources, prioritizes them by
+specificity and provides a unified way to gather them</li>
+
+</ul>
+</section>
+<section id="slide-org33435e0">
+<h3 id="org33435e0">Showcase example</h3>
+</section>
+<section id="slide-orgbcf2e84">
+<h3 id="orgbcf2e84">Exercise</h3>
+<p>
+TODO: Come back here with database binary instructions from the repository
+Implement a program using <code>rio</code> and <code>etc</code> that manages the connection of a database
+</p>
+</section>
+</section>
+<section>
+<section id="slide-org28e63b7">
+<h2 id="org28e63b7">Define your application in layers</h2>
+<div class="outline-text-2" id="text-org28e63b7">
+</div>
+</section>
+<section id="slide-org0115616">
+<h3 id="org0115616">How do I design my app?</h3>
+<ul>
+<li>Should I just pass parameters for everything and work in <code>IO ()</code>?</li>
+<li>Should I use monad transformers?</li>
+<li>Should I use free monads?</li>
+
+</ul>
+
+<p>
+Why not bit of everything? each of them work for a particular
+context of your application
+</p>
+</section>
+<section id="slide-org529c03c">
+<h3 id="org529c03c">Layer 1</h3>
+<p>
+The <code>RIO</code> model, build a <code>ReaderT</code> with an environment
+that contains capabilities for functions:
+</p>
+
+<div class="org-src-container">
+
+<pre><code class="haskell" >data App
+  = App { appLogFunc :: !LogFunc
+        , appDbPool  :: !(Pool Conn)
+        }
+
+main :: IO ()
+main = do
+  app <- buildApp
+  runRIO app businessMain
+</code></pre>
+</div>
+
+<aside class="notes">
+<p>
+Why not StateT?
+</p>
+
+</aside>
+</section>
+<section id="slide-orgc56a8e3">
+<h3 id="orgc56a8e3">Layer 2</h3>
+<p>
+Define contracts on your app environment values
+</p>
+
+<div class="org-src-container">
+
+<pre><code class="haskell" >class HasFuncEnv env where
+  logFuncL :: Lens' env LogFunc
+
+logInfo
+  :: (HasLogFunc env, MonadReader env m)
+  => Utf8Builder -> m ()
+
+traceCall
+  :: (HasLogFunc env, MonadReader env m)
+  => Text -> (m b) -> m b
+traceCall name action =
+  logInfo $ "start function call " <> display name
+  result <- action
+  logInfo $ "finished function call " <> display name
+
+businessMain :: RIO App ()
+businessMain = do
+  traceCall "performing other initialization"
+            internalFunction
+</code></pre>
+</div>
+</section>
+<section id="slide-org3cc689a">
+<h3 id="org3cc689a">Layer 3</h3>
+<p>
+This last layer contains functions that receieve all the input parameters as
+values (from layer 2) and performs some transformation or instruction around
+what to do next.
+</p>
+
+<p>
+TODO: Return here when you have a better example
+</p>
+</section>
+<section id="slide-org2e201b9">
+<h3 id="org2e201b9">Layer 0</h3>
+<p>
+Building an environment for your application is not a simple task when using
+ghcid
+</p>
+
+<ul>
+<li>What happens when you are allocating multiple resources (threads,
+connections, file handles), how do you clean them up?</li>
+
+<li>How do you make sure your application is completely discarded and built a
+new on every change?</li>
+
+</ul>
+</section>
+<section id="slide-org5138960">
+<h3 id="org5138960"><a id="ID-668358df-365a-4225-9e7e-2a808aae1db1"></a>The resource pyramid</h3>
+<div class="org-src-container">
+
+<pre><code class="haskell" >withLogFunc logOptions $ \appLogFunc ->
+  withPool createConn dropConn $ \appPool ->
+    withMetrics metrcisConfig $ \appMetrics -> do
+      let app = Application { appLogFunc, appPool, appMetrics  }
+</code></pre>
+</div>
+
+</section>
+<section id="slide-orgc81ec31">
+<h3 id="orgc81ec31">ComponentM</h3>
+<p>
+I build a library that:
+</p>
+
+<ul>
+<li>Composes components together with cleanup semantics</li>
+<li>Manages setup/teardown on failures on initialization or teardown</li>
+<li>Parallelizes the initialization of components</li>
+
+</ul>
+</section>
+<section id="slide-org3df42eb">
+<h3 id="org3df42eb">Exercise</h3>
+<p>
+TODO: Come back here
+</p>
+</section>
+</section>
+<section>
+<section id="slide-orgcbbf638">
+<h2 id="orgcbbf638">Model sensitive components as reliable processes</h2>
+<div class="outline-text-2" id="text-orgcbbf638">
+</div>
+</section>
+<section id="slide-org73c8c30">
+<h3 id="org73c8c30">Dealing with errors</h3>
+<ul>
+<li class="fragment fade-in">What happens when:
+<ul>
+<li>the database fails?</li>
+<li>the network falls down?</li>
+<li>your node runs out of memory?</li>
+
+</ul></li>
+<li class="fragment fade-in">Does one exception in a component of your system affects others?</li>
+<li class="fragment fade-in">Is your application up and healthy after the all the dependency errors are
+gone?</li>
+
+</ul>
+</section>
+<section id="slide-orge5b8673">
+<h3 id="orge5b8673">Use async/threads (processes) to contain error propagation</h3>
+<ul>
+<li>If exceptions happen in one Process, it won't stop the others</li>
+<li>If Process die, what's next?</li>
+
+</ul>
+</section>
+<section id="slide-org0910aa0">
+<h3 id="org0910aa0">Approach: Have a restarter thread</h3>
+<p>
+Naive approach, implement a restart thread
+</p>
+
+<div class="org-src-container">
+
+<pre><code class="haskell" >withRestarter :: IO () -> IO (Async ())
+withRestarter run =
+  async $ fix $ \recur -> do
+    runAsync <- async run
+    result <- waitCatch runAsync
+    case result of
+      Left err -> recur
+      Right _ -> return ()
+</code></pre>
+</div>
+
+</section>
+<section id="slide-org9599e2c">
+<h3 id="org9599e2c">Why is this not ideal?</h3>
+<ul>
+<li>Depending on the <code>run</code> sub-routine you may affect other systems, e.g. HTTP request</li>
+<li>There is no limits around how many restarts make sense</li>
+<li>There is no telemetry out of the box</li>
+
+</ul>
+
+</section>
+<section id="slide-orgf3dec4a">
+<h3 id="orgf3dec4a">Using OTP Supervisors</h3>
+<p>
+This technique has been tackled before by Erlang, in specific OTP Supervisors,
+they:
+</p>
+
+<ul>
+<li>Offer static values that represent restart strategies</li>
+<li>Allows you to link workers together and restart all of them at once, or just
+the failing ones</li>
+<li>Allows you to compose reliable sub-systems together through Supervision Trees</li>
+<li>Keeps telemetry around all the things that can go wrong</li>
+
+</ul>
+
+</section>
+<section id="slide-org710a059">
+<h3 id="org710a059">Worker Restart Strategies</h3>
+<ul>
+<li><code>Permanent</code>: The supervised process is <i>always</i> restarted on termination</li>
+
+<li><code>Transient</code>: The supervised process is restarted on failure only</li>
+
+<li><code>Temporal</code>: The supervised process is <i>never</i> restarted (<code>forkIO</code> behavior)</li>
+
+</ul>
+
+</section>
+<section id="slide-org8cc15a5">
+<h3 id="org8cc15a5">Supervisor Restart Strategies (<code>OneForOne</code>)</h3>
+<img src="http://learnyousomeerlang.com/static/img/restart-one-for-one.png"></img>
+
+</section>
+<section id="slide-org435030a">
+<h3 id="org435030a">Supervisor Restart Strategies (<code>OneForAll</code>)</h3>
+<img src="http://learnyousomeerlang.com/static/img/restart-one-for-all.png"></img>
+
+</section>
+<section id="slide-orgf4ff9bb">
+<h3 id="orgf4ff9bb">Examples over code</h3>
+<p>
+TODO
+</p>
+
+</section>
+<section id="slide-org1d00f19">
+<h3 id="org1d00f19">Exercise</h3>
+<p>
+TODO
+</p>
+</section>
+</section>
+<section>
+<section id="slide-orgbf4cd7e">
+<h2 id="orgbf4cd7e">BREAK</h2>
+</section>
+</section>
+<section>
+<section id="slide-orgd9b0ee1">
+<h2 id="orgd9b0ee1">Dealing with flaky integration points</h2>
+<div class="outline-text-2" id="text-orgd9b0ee1">
+</div>
+</section>
+<section id="slide-org6fe26c6">
+<h3 id="org6fe26c6">Disclaimer</h3>
+<p>
+This section is heavily inspired by Mike Nygard's excellent "Release It"
+book, if you want to get more details about these concepts, be sure to read
+this book.
+</p>
+</section>
+<section id="slide-org241caef">
+<h3 id="org241caef">Defining impulses and strain</h3>
+<ul>
+<li><b><b>Impulses</b></b> are rapid shocks to the system (e.g. a DoS attack, black friday
+online sales)</li>
+<li><b><b>Strain</b></b> is produced by stress over time to the system (e.g. slow responses from
+credit card service)</li>
+<li><b><b>Strains</b></b> produce <b><b>Cracks</b></b> in your system</li>
+
+</ul>
+</section>
+<section id="slide-org140a2d9">
+<h3 id="org140a2d9">Strain manifestations</h3>
+<ul>
+<li>Unresponsive application</li>
+<li>Slow spike in RAM on web server</li>
+<li>Excess I/O Rate on the database</li>
+<li>etc.</li>
+
+</ul>
+</section>
+<section id="slide-orgf832fa4">
+<h3 id="orgf832fa4">Common terminology</h3>
+<ul>
+<li><b><b>Fault</b></b> &#x2013; A condition that creates an incorrect state in your software (bug,
+edge case)</li>
+<li><b><b>Error</b></b> &#x2013; Visibly incorrect behavior. Something doesn't work the way it
+supposed to</li>
+<li><b><b>Failure</b></b> &#x2013; An unresponsive system</li>
+
+</ul>
+</section>
+<section id="slide-org5b16e71">
+<h3 id="org5b16e71">How cracks propagate</h3>
+<p>
+Triggering a fault opens the crack. Faults become errors, and errors provoke
+failures. That's how the cracks propagate
+</p>
+</section>
+<section id="slide-org42730cb">
+<h3 id="org42730cb">Common sources of strain</h3>
+<ul>
+<li>Lack of timeouts on outgoing requests</li>
+<li>Heavy allocation of memory (cache in proc) with no <a href="http://hackage.haskell.org/package/base-4.11.1.0/docs/System-Mem-Weak.html">weak pointers</a> strategies</li>
+<li>Resource pools get drained because of failures on lower layers of the stack</li>
+<li>Resource allocation exaustion, how many open files/ports can your program
+have at a time?</li>
+<li>Not limiting sizes of resources (Infinite <code>TQueue</code>)</li>
+<li>Not limiting sizes of SQL queries</li>
+
+</ul>
+</section>
+<section id="slide-org7ba6edc">
+<h3 id="org7ba6edc">Timeout</h3>
+<ul>
+<li>Immediately retrying an operation is probably a bad idea; it's likely going
+to fail again. Not often is a "transient error"</li>
+<li>Consider delayed retries (with jitter times)</li>
+<li></li>
+
+</ul>
+</section>
+<section id="slide-org9288ed4">
+<h3 id="org9288ed4">Circuit Breakers</h3>
+<p>
+This abstraction keeps track of a state of a 3rd party system, if the third
+party system fails a number of times, the breaker it's marked as "Open",
+meaning any requests is going to be failed immediately, not causing strain in
+the sub-system.
+</p>
+
+<p>
+After a timeout, a canary request is performed, if it works as expected, the
+circuit is open, if not the breaker is kept open until the next timeout.
+</p>
+
+</section>
+<section id="slide-org6f2f553">
+<h3 id="org6f2f553">Circuit Breakers</h3>
+<img src="./img/circuit_breaker.png"></img>
+
+</section>
+<section id="slide-org031894b">
+<h3 id="org031894b">Mitigation strategies</h3>
+<ul>
+<li>Timeouts: everytime you are using an allocated resource, use a timeout
+(even on DB connections)</li>
+
+<li>When interacting with 3rd party APIs, make sure you use Circuit Breakers to
+fail fast when 3rd party systems are down</li>
+
+<li>When dealing with memory cache, make sure to use Weak Pointers</li>
+
+</ul>
+
+</section>
+</section>
+<section>
+<section id="slide-org03fb5d7">
+<h2 id="org03fb5d7">AWS in your box</h2>
+<ul>
+<li>We are going to use <a href="https://github.com/localstack/localstack"><code>localstack</code></a> to experiment with SQS and SNS</li>
+
+</ul>
+</section>
+<section id="slide-org6e64aa6">
+<h3 id="org6e64aa6">Install localstack</h3>
+<p>
+We are going to use localstack, a test/mocking framework for AWS
+applications
+</p>
+
+<p>
+Execute <code>docker-compose up</code> in the cloud-crawler project
+</p>
+
+</section>
+<section id="slide-orgd89f97e">
+<h3 id="orgd89f97e">Anatomy of a crawler application</h3>
+<div class="org-src-container">
+
+<pre><code class="text" >.
+├── crawler_url_topic (sns)
+│   ├── crawler_summary_consumer (sqs)
+│   └── crawler_url_queue (haskell program)
+│       └── consumer
+│           ├── worker-1
+│           └── worker-2
+└── domain_stats_topic (sns)
+    └── domain_stats_consumer (sqs)
+        └── consumer_program (haskell program)
+            ├── worker-1
+            └── worker-2
+</code></pre>
+</div>
+
+<ul>
+<li>Crawler worker pushes to domain stats worker</li>
+
+</ul>
+
+</section>
+</section>
+<section>
+<section id="slide-orgde18fae">
+<h2 id="orgde18fae">Adding chaos to the mix</h2>
+<div class="outline-text-2" id="text-orgde18fae">
+</div>
+</section>
+<section id="slide-orgb11c7a3">
+<h3 id="orgb11c7a3">Challenge</h3>
+<p>
+So far we have talked about how to make software less fragile, but how do we
+make sure this is the case?
+</p>
+
+</section>
+<section id="slide-orgb805b65">
+<h3 id="orgb805b65">Innoculate your system</h3>
+<p>
+To test our system recovers succintly after errors we can try building
+components with toxic testing in mind
+</p>
+
+</section>
+<section id="slide-org1bb09df">
+<h3 id="org1bb09df">Toxiproxy</h3>
+<p>
+With toxiproxy we can create a controlled miss-behaving proxy that sits in
+the middle between your program and its dependencies, it can:
+</p>
+
+<ul>
+<li>Add latency to a connection (upstream/downstream)</li>
+<li>Add jitter/noise to the contents of a connection</li>
+<li>Reduce bandwith to a maximum number of kilobytes per second</li>
+<li>Delay closing TCP connections</li>
+<li>Add big variation to TPC packets sizes and delays them</li>
+
+</ul>
+
+</section>
+<section id="slide-org2a6cc38">
+<h3 id="org2a6cc38">Adding toxiproxy to the project</h3>
+</section>
+</section>
+</div>
+</div>
+<script src="./reveal.js/lib/js/head.min.js"></script>
+<script src="./reveal.js/js/reveal.js"></script>
+
+<script>
+// Full list of configuration options available here:
+// https://github.com/hakimel/reveal.js#configuration
+Reveal.initialize({
+
+controls: true,
+progress: true,
+history: false,
+center: true,
+slideNumber: 'c',
+rollingLinks: false,
+keyboard: true,
+overview: true,
+
+theme: Reveal.getQueryHash().theme, // available themes are in /css/theme
+transition: Reveal.getQueryHash().transition || 'default', // default/cube/page/concave/zoom/linear/fade/none
+transitionSpeed: 'default',
+multiplex: {
+    secret: '', // null if client
+    id: '', // id, obtained from socket.io server
+    url: '' // Location of socket.io server
+},
+
+// Optional libraries used to extend on reveal.js
+dependencies: [
+ { src: './reveal.js/plugin/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } },
+ { src: './reveal.js/plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } }]
+});
+</script>
+</body>
+</html>

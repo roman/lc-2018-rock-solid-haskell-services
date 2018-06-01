@@ -1,0 +1,9 @@
+name: small-program
+dependencies:
+- base
+- rio
+
+executables:
+  small-program:
+    source-dirs: app
+    main: Main.lhs

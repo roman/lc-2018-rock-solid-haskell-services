@@ -1,0 +1,19 @@
+.reveal .slides {
+    text-align: left;
+}
+.reveal h1, .reveal h2, .reveal h3, .reveal h4, .reveal h5, .reveal h6 {
+    font-family: "Overpass 2", sans-serif;
+}
+.reveal b {
+    color: #DAA520;
+}
+.reveal a {
+    color: white;
+    text-decoration: underline;
+    color: #DAA520;
+}
+.reveal span.author {
+    font-size: 75%;
+}
+
+/* "https://s3.amazonaws.com/static.slid.es/fonts/overpass2/overpass2.css" */

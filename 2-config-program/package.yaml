@@ -1,0 +1,10 @@
+name: config-program
+dependencies:
+- base
+- etc
+- file-embed
+- rio
+executables:
+  config-program:
+    source-dirs: app
+    main: Main.hs

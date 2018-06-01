@@ -1,0 +1,12 @@
+resolver: lts-11.10
+packages:
+- .
+extra-deps:
+- rio-0.1.2.0
+- etc-0.4.0.1
+
+flags:
+  etc:
+    yaml: true
+    cli: true
+    extra: true

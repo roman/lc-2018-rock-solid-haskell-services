@@ -1,0 +1,435 @@
+#+OPTIONS: toc:nil num:nil reveal_title_slide:nil
+#+REVEAL_PLUGINS: (notes highlight)
+#+REVEAL_THEME: black
+#+REVEAL_EXTRA_CSS: https://s3.amazonaws.com/static.slid.es/fonts/overpass2/overpass2.css
+#+REVEAL_EXTRA_CSS: ./slides.css
+#+AUTHOR: Roman Gonzalez
+#+TITLE: Rock-Solid Haskell Services
+#+EMAIL: roman@roman-gonzalez.info
+* Rock-Solid Haskell Services
+#+REVEAL_HTML: <h4 class="sub-title">LambdaConf 2018 - Boulder, CO</h4>
+#+REVEAL_HTML: <p class="author"><a href="https://twitter.com/romanandreg">Roman Gonzalez</a></p>
+#+REVEAL_HTML: <p class="author"><a href="https://github.com/roman/lc-2018-rock-solid-haskell">https://github.com/roman/lc-2018-rock-solid-haskell</a></p>
+* Agenda
+#+ATTR_REVEAL: :frag (fade-in)
+- Introduction/Setup
+- Start with a solid foundation (Custom Prelude)
+- Standarizing your team workflow
+- Managing configuration values succintly
+- Define your application in layers
+- Model sensitive components as reliable processes
+- Dealing with flaky integration points
+- AWS in your box
+- Adding chaos to the mix
+
+#+BEGIN_NOTES
+
+BLOCK (2 HOURS)
+- Introduction/Setup (15 minutes)
+- Start with a solid foundation (Custom Prelude)
+  + slides and github (15 minutes)
+  + build a small application using RIO Logger (Guided: 10 minutes)
+  + build a small CLI application (Not Guided: 15 minutes) <- WHAT TO DO? NOT SURE YET
+
+--- BREAK
+
+- Standarizing your workflow as a team
+  + Installing tooling (brittany, stylish-haskell, hlint, ghcid)
+  + Slides on tools and code around Makefiles (20 minutes)
+
+-- BREAK
+
+BLOCK (2 HOURS)
+
+- Managing configuration values succintly
+  + slides (10 minutes)
+  + overview of ~etc~ (Guided: 15 minutes)
+  + challenge: extend previous CLI application with config value from different
+    sources (20 minutes)
+
+- Define your application in layers
+  + slides (10 minutes)
+  + overview of ~componentm~ (Guided: 10 minutes)
+  + challenge: add Sqlite Database to CLI application
+
+- Model sensitive components as reliable processes
+
+-- BREAK
+
+BLOCK (2 HOURS)
+
+- AWS in your own box
+- Dealing with flaky integration points
+- Adding chaos to the mix
+
+#+END_NOTES
+* Introduction/Setup
+  - Install [[https://docs.haskellstack.org/en/stable/install_and_upgrade/][stack]] or [[https://www.haskell.org/cabal/download.html][cabal]]
+  - [[https://github.com/Shopify/toxiproxy/releases/tag/v2.1.3][Clone]] project repository
+  - [[https://github.com/Shopify/toxiproxy/releases/tag/v2.1.3][Download]] toxiproxy-cli and toxiproxy-server
+  - [[https://docs.docker.com/install/][Install]] docker
+
+* Start with a solid foundation
+** Why go with a custom ~Prelude~?
+   #+ATTR_REVEAL: :frag (fade-in)
+   - Most production Haskell code is built over a set of well known libraries
+     (~bytestring~, ~text~, ~deepseq~, etc.)
+
+   - Defaults allow developers to use dangerous APIs that are partial
+     (e.g. ~head~, ~tail~, etc.)
+
+   - Defaults use non-performant data structures (e.g. ~List~, ~String~) by
+     default
+
+** What options are available?
+
+  - The ones I would recommend are [[https://github.com/commercialhaskell/rio][~rio~]] or [[https://github.com/sdiehl/protolude][~protolude~]]
+  - This workshop will use the ~rio~ package
+
+** Getting started with RIO
+
+Go to project ~1-small-program~ in the workshop repository
+
+#+BEGIN_NOTES
+Go through source code, implement a small program that logs stuff
+#+END_NOTES
+
+** Implement a small program using RIO
+
+* Standarizing your team workflow
+** Why to standarize: A tale about CI breakages
+** Makefiles
+#+BEGIN_NOTES
+Go to Haskell-capataz to showcase how to use a setup
+#+END_NOTES
+** A set of tools to keep code tidy
+   + hlint
+   + refactor
+   + stylish-haskell
+   + brittany or hindent
+   + ~stack install hlint refactor stylish-haskell brittany~
+#+BEGIN_NOTES
+Showcase make/tools
+#+END_NOTES
+** Fast development using ghcid
+   :PROPERTIES:
+   :ID:       33bc9bce-064c-48a0-9075-2574b1868060
+   :CREATED:  <2018-05-31 Thu 23:01>
+   :END:
+#+BEGIN_SRC shell
+make -f make/dev ghcid
+#+END_SRC
+
+* BREAK
+* Managing configuration values succintly
+** 12Factor
+  Ideally you want your application to follow a 12factor mantra
+
+  #+BEGIN_QUOTE
+  Strict separation of config from code
+  #+END_QUOTE
+
+  Configuration varies substantially across deploys, code *does not*
+
+** Strategies to Config
+
+   - Configuration File(s)
+   - Environment Variables
+   - CLI options
+
+   Should we pick one, or should we use more than one approach?
+#+BEGIN_NOTES
+Point detriments of each of the approaches
+
+- files:
+  + You can accidently checkin configuration files
+  + Discuss also how arbitrary it is model your software by environments (rails style)
+
+- env vars:
+  + You then have many different environment variables to tweak
+  + THE WORST: You perform IO in the middle of your business logic to gather a config value
+
+- cli:
+  + You have N+1 options to pass to a CLI, development time sucks
+#+END_NOTES
+** Managing Application Config with ~etc~
+   #+ATTR_REVEAL: :frag (fade-in)
+   - Supports configuration files, environment variables and CLI options
+
+   - Defines a spec for all your application settings (one canonical location
+     for all config related decissions)
+
+   - Merges configuration values from _all_ sources, prioritizes them by
+     specificity and provides a unified way to gather them
+** Showcase example
+** Exercise
+   TODO: Come back here with database binary instructions from the repository
+   Implement a program using ~rio~ and ~etc~ that manages the connection of a database
+* Define your application in layers
+** How do I design my app?
+
+  - Should I just pass parameters for everything and work in ~IO ()~?
+  - Should I use monad transformers?
+  - Should I use free monads?
+
+  Why not bit of everything? each of them work for a particular
+  context of your application
+** Layer 1
+
+  The ~RIO~ model, build a ~ReaderT~ with an environment
+  that contains capabilities for functions:
+
+  #+BEGIN_SRC haskell
+    data App
+      = App { appLogFunc :: !LogFunc
+            , appDbPool  :: !(Pool Conn)
+            }
+
+    main :: IO ()
+    main = do
+      app <- buildApp
+      runRIO app businessMain
+  #+END_SRC
+
+  #+BEGIN_NOTES
+  Why not StateT?
+  #+END_NOTES
+** Layer 2
+   Define contracts on your app environment values
+
+#+BEGIN_SRC haskell
+  class HasFuncEnv env where
+    logFuncL :: Lens' env LogFunc
+
+  logInfo
+    :: (HasLogFunc env, MonadReader env m)
+    => Utf8Builder -> m ()
+
+  traceCall
+    :: (HasLogFunc env, MonadReader env m)
+    => Text -> (m b) -> m b
+  traceCall name action =
+    logInfo $ "start function call " <> display name
+    result <- action
+    logInfo $ "finished function call " <> display name
+
+  businessMain :: RIO App ()
+  businessMain = do
+    traceCall "performing other initialization"
+              internalFunction
+#+END_SRC
+** Layer 3
+   This last layer contains functions that receieve all the input parameters as
+   values (from layer 2) and performs some transformation or instruction around
+   what to do next.
+
+   TODO: Return here when you have a better example
+** Layer 0
+   Building an environment for your application is not a simple task when using
+   ghcid
+
+   - What happens when you are allocating multiple resources (threads,
+     connections, file handles), how do you clean them up?
+
+   - How do you make sure your application is completely discarded and built a
+     new on every change?
+** The resource pyramid
+   :PROPERTIES:
+   :ID:       668358df-365a-4225-9e7e-2a808aae1db1
+   :CREATED:  <2018-06-01 Fri 00:32>
+   :END:
+
+#+BEGIN_SRC haskell
+  withLogFunc logOptions $ \appLogFunc ->
+    withPool createConn dropConn $ \appPool ->
+      withMetrics metrcisConfig $ \appMetrics -> do
+        let app = Application { appLogFunc, appPool, appMetrics  }
+#+END_SRC
+
+** ComponentM
+
+   I build a library that:
+
+   * Composes components together with cleanup semantics
+   * Manages setup/teardown on failures on initialization or teardown
+   * Parallelizes the initialization of components
+** Exercise
+   TODO: Come back here
+* Model sensitive components as reliable processes
+** Dealing with errors
+   #+ATTR_REVEAL: :frag (fade-in)
+   - What happens when:
+     + the database fails?
+     + the network falls down?
+     + your node runs out of memory?
+   - Does one exception in a component of your system affects others?
+   - Is your application up and healthy after the all the dependency errors are
+     gone?
+** Use async/threads (processes) to contain error propagation
+   - If exceptions happen in one Process, it won't stop the others
+   - If Process die, what's next?
+** Approach: Have a restarter thread
+
+Naive approach, implement a restart thread
+
+#+BEGIN_SRC haskell
+  withRestarter :: IO () -> IO (Async ())
+  withRestarter run =
+    async $ fix $ \recur -> do
+      runAsync <- async run
+      result <- waitCatch runAsync
+      case result of
+        Left err -> recur
+        Right _ -> return ()
+#+END_SRC
+
+** Why is this not ideal?
+- Depending on the ~run~ sub-routine you may affect other systems, e.g. HTTP request
+- There is no limits around how many restarts make sense
+- There is no telemetry out of the box
+
+** Using OTP Supervisors
+
+This technique has been tackled before by Erlang, in specific OTP Supervisors,
+they:
+
+- Offer static values that represent restart strategies
+- Allows you to link workers together and restart all of them at once, or just
+  the failing ones
+- Allows you to compose reliable sub-systems together through Supervision Trees
+- Keeps telemetry around all the things that can go wrong
+
+** Worker Restart Strategies
+
+- ~Permanent~: The supervised process is /always/ restarted on termination
+
+- ~Transient~: The supervised process is restarted on failure only
+
+- ~Temporal~: The supervised process is /never/ restarted (~forkIO~ behavior)
+
+** Supervisor Restart Strategies (~OneForOne~)
+
+#+REVEAL_HTML: <img src="http://learnyousomeerlang.com/static/img/restart-one-for-one.png"></img>
+
+** Supervisor Restart Strategies (~OneForAll~)
+
+#+REVEAL_HTML: <img src="http://learnyousomeerlang.com/static/img/restart-one-for-all.png"></img>
+
+** Examples over code
+
+TODO
+
+** Exercise
+
+TODO
+* BREAK
+* Dealing with flaky integration points
+** Disclaimer
+   This section is heavily inspired by Mike Nygard's excellent "Release It"
+   book, if you want to get more details about these concepts, be sure to read
+   this book.
+** Defining impulses and strain
+- **Impulses** are rapid shocks to the system (e.g. a DoS attack, black friday
+  online sales)
+- **Strain** is produced by stress over time to the system (e.g. slow responses from
+  credit card service)
+- **Strains** produce **Cracks** in your system
+** Strain manifestations
+- Unresponsive application
+- Slow spike in RAM on web server
+- Excess I/O Rate on the database
+- etc.
+** Common terminology
+- **Fault** -- A condition that creates an incorrect state in your software (bug,
+  edge case)
+- **Error** -- Visibly incorrect behavior. Something doesn't work the way it
+  supposed to
+- **Failure** -- An unresponsive system
+** How cracks propagate
+   Triggering a fault opens the crack. Faults become errors, and errors provoke
+   failures. That's how the cracks propagate
+** Common sources of strain
+   - Lack of timeouts on outgoing requests
+   - Heavy allocation of memory (cache in proc) with no [[http://hackage.haskell.org/package/base-4.11.1.0/docs/System-Mem-Weak.html][weak pointers]] strategies
+   - Resource pools get drained because of failures on lower layers of the stack
+   - Resource allocation exaustion, how many open files/ports can your program
+     have at a time?
+   - Not limiting sizes of resources (Infinite ~TQueue~)
+   - Not limiting sizes of SQL queries
+** Timeout
+   - Immediately retrying an operation is probably a bad idea; it's likely going
+     to fail again. Not often is a "transient error"
+   - Consider delayed retries (with jitter times)
+   -
+** Circuit Breakers
+
+   This abstraction keeps track of a state of a 3rd party system, if the third
+   party system fails a number of times, the breaker it's marked as "Open",
+   meaning any requests is going to be failed immediately, not causing strain in
+   the sub-system.
+
+   After a timeout, a canary request is performed, if it works as expected, the
+   circuit is open, if not the breaker is kept open until the next timeout.
+
+** Circuit Breakers
+
+#+REVEAL_HTML: <img src="./img/circuit_breaker.png"></img>
+
+** Mitigation strategies
+   - Timeouts: everytime you are using an allocated resource, use a timeout
+     (even on DB connections)
+
+   - When interacting with 3rd party APIs, make sure you use Circuit Breakers to
+     fail fast when 3rd party systems are down
+
+   - When dealing with memory cache, make sure to use Weak Pointers
+
+* AWS in your box
+- We are going to use [[https://github.com/localstack/localstack][~localstack~]] to experiment with SQS and SNS
+** Install localstack
+
+   We are going to use localstack, a test/mocking framework for AWS
+   applications
+
+   Execute ~docker-compose up~ in the cloud-crawler project
+
+** Anatomy of a crawler application
+
+#+BEGIN_SRC text
+.
+├── crawler_url_topic (sns)
+│   ├── crawler_summary_consumer (sqs)
+│   └── crawler_url_queue (haskell program)
+│       └── consumer
+│           ├── worker-1
+│           └── worker-2
+└── domain_stats_topic (sns)
+    └── domain_stats_consumer (sqs)
+        └── consumer_program (haskell program)
+            ├── worker-1
+            └── worker-2
+#+END_SRC
+
+- Crawler worker pushes to domain stats worker
+
+* Adding chaos to the mix
+** Challenge
+   So far we have talked about how to make software less fragile, but how do we
+   make sure this is the case?
+
+** Innoculate your system
+   To test our system recovers succintly after errors we can try building
+   components with toxic testing in mind
+
+** Toxiproxy
+
+   With toxiproxy we can create a controlled miss-behaving proxy that sits in
+   the middle between your program and its dependencies, it can:
+
+   - Add latency to a connection (upstream/downstream)
+   - Add jitter/noise to the contents of a connection
+   - Reduce bandwith to a maximum number of kilobytes per second
+   - Delay closing TCP connections
+   - Add big variation to TPC packets sizes and delays them
+
+** Adding toxiproxy to the project
