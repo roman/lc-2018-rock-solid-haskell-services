@@ -1,0 +1,10 @@
+name: producer-consumer
+dependencies:
+- base
+- rio
+- capataz
+
+executables:
+  producer-consumer:
+    source-dirs: app
+    main: Main.hs

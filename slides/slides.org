@@ -163,8 +163,7 @@ Point detriments of each of the approaches
      specificity and provides a unified way to gather them
 ** Showcase example
 ** Exercise
-   TODO: Come back here with database binary instructions from the repository
-   Implement a program using ~rio~ and ~etc~ that manages the connection of a database
+   Let's do some coding in ~2-config-program~
 * Define your application in layers
 ** How do I design my app?
 
@@ -222,8 +221,6 @@ Point detriments of each of the approaches
    This last layer contains functions that receieve all the input parameters as
    values (from layer 2) and performs some transformation or instruction around
    what to do next.
-
-   TODO: Return here when you have a better example
 ** Layer 0
    Building an environment for your application is not a simple task when using
    ghcid
@@ -301,11 +298,11 @@ they:
 
 ** Worker Restart Strategies
 
-- ~Permanent~: The supervised process is /always/ restarted on termination
+- **Permanent**: The supervised process is /always/ restarted on termination
 
-- ~Transient~: The supervised process is restarted on failure only
+- **Transient**: The supervised process is restarted on failure only
 
-- ~Temporal~: The supervised process is /never/ restarted (~forkIO~ behavior)
+- **Temporary**: The supervised process is /never/ restarted (~forkIO~ behavior)
 
 ** Supervisor Restart Strategies (~OneForOne~)
 
@@ -317,11 +314,12 @@ they:
 
 ** Examples over code
 
-TODO
+  Go to producer-consumers project in repository
 
 ** Exercise
 
-TODO
+  Experiment with different strategies for restart in both supervisor and workers
+
 * BREAK
 * Dealing with flaky integration points
 ** Disclaimer
@@ -360,7 +358,6 @@ TODO
    - Immediately retrying an operation is probably a bad idea; it's likely going
      to fail again. Not often is a "transient error"
    - Consider delayed retries (with jitter times)
-   -
 ** Circuit Breakers
 
    This abstraction keeps track of a state of a 3rd party system, if the third

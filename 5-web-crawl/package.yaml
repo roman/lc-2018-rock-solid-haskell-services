@@ -1,0 +1,24 @@
+name: web-crawl
+dependencies:
+- base
+- rio
+- etc
+- componentm
+- componentm-devel
+- capataz
+- file-embed
+- aeson
+
+- scientific
+- network-uri
+- amazonka >= 1.5.0
+- amazonka-sqs >= 1.5.0
+- network
+- toxiproxy-haskell
+- servant-client
+- transformers
+
+executables:
+  web-crawler:
+    source-dirs: app
+    main: Main.hs

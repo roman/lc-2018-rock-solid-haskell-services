@@ -1,3 +1,6 @@
 [submodule "2-config-program/vendor/rio"]
 	path = 2-config-program/vendor/rio
 	url = https://github.com/commercialhaskell/rio
+[submodule "5-web-crawl/vendor/rio"]
+	path = 5-web-crawl/vendor/rio
+	url = https://github.com/commercialhaskell/rio

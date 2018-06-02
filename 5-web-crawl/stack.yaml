@@ -1,0 +1,24 @@
+resolver: lts-10.7
+packages:
+- .
+- vendor/rio/rio
+extra-deps:
+- etc-0.4.0.2
+- capataz-0.2.0.0
+- componentm-0.0.0.2
+- componentm-devel-0.0.0.2
+- teardown-0.5.0.0
+
+- amazonka-1.6.0
+- amazonka-core-1.6.0
+- amazonka-sqs-1.6.0
+- typed-process-0.2.2.0
+- unliftio-0.2.7.0
+- toxiproxy-haskell-0.2.1.0
+
+# Override default flag values for local packages and extra-deps
+flags:
+  etc:
+    extra: true
+    yaml: true
+    cli: true

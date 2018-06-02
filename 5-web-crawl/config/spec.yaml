@@ -1,0 +1,65 @@
+etc/files:
+  env: APP_CONFIG_PATH
+  paths:
+  - ./config/development.yaml
+  - ./usr/local/etc/staging.yaml
+  - ./usr/local/etc/production.yaml
+
+etc/entries:
+  logger:
+    level:
+      etc/spec:
+        default: info
+        env: APP_LOG_LEVEL
+
+    handle:
+      etc/spec:
+        default: stdout
+        env: APP_LOG_HANDLE
+
+    verbose:
+      etc/spec:
+        default: false
+        type: bool
+        env: APP_LOG_VERBOSE
+
+  aws:
+    access_key:
+      etc/spec:
+        default: null
+        type: string
+        sensitive: true
+        env: AWS_ACCESS_KEY_ID
+
+    secret_key:
+      etc/spec:
+        default: null
+        type: string
+        sensitive: true
+        env: AWS_SECRET_ACCESS_KEY
+
+    sns:
+      endpoint:
+        etc/spec:
+          default: null
+          type: string
+          env: APP_SNS_ENDPOINT
+    sqs:
+      queues:
+        etc/spec:
+          type: '[object]'
+          default:
+          - name: queue1
+            url: http://localhost:4576/queue/queue1
+            toxics: []
+
+      timeout_seconds:
+        etc/spec:
+          default: null
+          type: number
+
+      endpoint:
+        etc/spec:
+          default: null
+          type: string
+          env: APP_SQS_ENDPOINT

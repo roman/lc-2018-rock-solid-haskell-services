@@ -1,11 +1,9 @@
 resolver: lts-11.10
 packages:
 - .
-- vendor/rio/rio
-- vendor/rio/rio-orphans
-
 extra-deps:
+- rio-0.1.2.0
 - componentm-0.0.0.2
 - componentm-devel-0.0.0.2
 - teardown-0.5.0.0
-- etc-0.4.0.2
+- capataz-0.2.0.0
