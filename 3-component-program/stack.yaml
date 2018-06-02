@@ -1,0 +1,17 @@
+resolver: lts-11.10
+packages:
+- .
+- vendor/rio/rio
+- vendor/rio/rio-orphans
+- vendor/etc/etc
+
+extra-deps:
+- componentm-0.0.0.2
+- componentm-devel-0.0.0.2
+- teardown-0.5.0.0
+
+flags:
+  etc:
+    yaml: true
+    cli: true
+    extra: true

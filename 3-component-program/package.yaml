@@ -1,0 +1,25 @@
+name: component-program
+dependencies:
+- base
+- rio
+- rio-orphans
+
+# configuration
+- etc
+- file-embed
+- aeson
+
+- componentm
+- componentm-devel
+
+# database
+- persistent
+- persistent-postgresql
+- persistent-template
+- monad-logger
+- resource-pool
+
+executables:
+  component-program:
+    source-dirs: app
+    main: Main.hs
