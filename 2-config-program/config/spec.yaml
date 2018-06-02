@@ -8,11 +8,13 @@ etc/files:
 etc/entries:
   logging:
     verbose:
-      default: False
-      env: APP_LOG_VERBOSE
+      etc/spec:
+        default: False
+        env: APP_LOG_VERBOSE
     handle:
-      default: 'stdout'
-      env: APP_LOG_HANDLE
+      etc/spec:
+        default: 'stdout'
+        env: APP_LOG_HANDLE
 
   database:
     username:
@@ -21,13 +23,17 @@ etc/entries:
         type: string
         env: APP_DB_USER
         cli:
+          input: option
+          required: false
           long: user
-          meta: USERNAME
+          metavar: USERNAME
     password:
       etc/spec:
         type: string
         sensitive: true
         env: APP_DB_PASSWORD
         cli:
-          long: user
-          meta: USERNAME
+          input: option
+          required: false
+          long: password
+          metavar: PASSWORD

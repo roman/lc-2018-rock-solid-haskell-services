@@ -1,8 +1,10 @@
 resolver: lts-11.10
 packages:
 - .
+- vendor/rio/rio
+- vendor/rio/rio-orphans
+
 extra-deps:
-- rio-0.1.2.0
 - etc-0.4.0.1
 
 flags:

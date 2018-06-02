@@ -2,6 +2,7 @@ name: config-program
 dependencies:
 - base
 - rio
+- rio-orphans
 
 # configuration
 - etc
@@ -9,9 +10,12 @@ dependencies:
 - aeson
 
 # database
+- persistent
 - persistent-postgresql
 - persistent-template
+- monad-logger
 - resource-pool
+
 executables:
   config-program:
     source-dirs: app
