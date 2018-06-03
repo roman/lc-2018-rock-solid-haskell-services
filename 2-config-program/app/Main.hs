@@ -87,11 +87,13 @@ parseConnString = JSON.withObject "ConnString" $ \obj -> do
   user <- obj .: "username"
   password <- obj .: "password"
   database <- obj .: "database"
+  host     <- obj .: "host"
   return $
     Text.encodeUtf8
     $ Text.unwords [ "user=" <> user
                    , "password=" <> password
                    , "dbname=" <> database
+                   , "host=" <> host
                    ]
 
 withDatabasePool

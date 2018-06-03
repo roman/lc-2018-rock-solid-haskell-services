@@ -38,10 +38,12 @@ VERSION 2
 
 > mainLogger :: IO ()
 > mainLogger = do
->   logOptions <- logOptionsHandle stdout True
+>   isVerboseRef <- newIORef False
+>   logOptions <- logOptionsHandle stdout False
+>   let number = 123 :: Int
 >   withLogFunc logOptions $ \logFunc ->
 >     runRIO logFunc $ do
->       logInfo "Hello World"
+>       logInfo ("Hello World" <> display number)
 
 VERSION 3
 

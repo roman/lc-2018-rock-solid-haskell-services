@@ -27,6 +27,14 @@ etc/entries:
           required: false
           long: user
           metavar: USERNAME
+    database:
+      etc/spec:
+        default: lc2018
+        type: string
+    host:
+      etc/spec:
+        default: localhost
+        type: string
     password:
       etc/spec:
         type: string
