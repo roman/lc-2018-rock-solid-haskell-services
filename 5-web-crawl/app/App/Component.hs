@@ -9,6 +9,7 @@ import qualified System.Etc as Etc
 import qualified App.Component.Config as Config
 import qualified App.Component.Logger as Logger
 import qualified App.Component.AWS as AWS
+import qualified App.Component.Signal as Signal
 
 import Control.Monad.Component (ComponentM)
 import Types
@@ -26,5 +27,6 @@ appComponent = do
     configDoc <- readIORef configRef >>= Etc.renderConfig
     logInfo $ "\n# Application Configuration\n\n" <> displayShow configDoc
 
+  Signal.addINTSignal
   App <$> AWS.buildAwsRemoteQueues configRef logFunc
       <*> pure logFunc

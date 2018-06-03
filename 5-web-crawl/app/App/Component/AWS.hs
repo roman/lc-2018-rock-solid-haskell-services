@@ -159,6 +159,7 @@ buildToxicQueue proxy queueUrl env = do
   where
     (Proxy.ProxyName componentName) = Proxy.proxyName proxy
 
+--------------------------------------------------------------------------------
 
 data RemoteQueueEntry = RemoteQueueEntry
   {
@@ -182,6 +183,8 @@ instance JSON.FromJSON RemoteQueueEntry where
         RemoteQueueEntry <$> obj .: "url"
                          <*> pure queueName
                          <*> pure (Just toxicInfo)
+
+--------------------------------------------------------------------------------
 
 buildQueues
   :: Etc.IConfig config
