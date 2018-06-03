@@ -6,9 +6,13 @@ packages:
 - 4-producer-consumers
 # this one fails with lts-11.10
 # - 5-web-crawl
-# should probably use git-based references, submodules are confusing
-- vendor/rio/rio
-- vendor/rio/rio-orphans
+- location:
+    git: 'https://github.com/commercialhaskell/rio'
+    commit: '1ada2a3b0bb4dc1b452daec3c8b24304ac2475c9'
+  extra-dep: true
+  subdirs:
+    - rio
+    - rio-orphans
 
 extra-deps:
 - etc-0.4.0.3
