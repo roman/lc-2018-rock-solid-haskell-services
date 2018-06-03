@@ -48,3 +48,5 @@ etc/entries:
           required: false
           long: db
           metavar: DBNAME
+
+    host: "localhost"

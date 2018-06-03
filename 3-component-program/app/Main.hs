@@ -14,12 +14,14 @@ import RIO
 import RIO.Orphans ()
 import qualified RIO.Text as Text
 
+import Control.Exception (ErrorCall(..))
+
 import Data.FileEmbed (embedFile)
 import qualified System.Etc as Etc
 
 import Data.Aeson ((.:))
 import qualified Data.Aeson as JSON
-import qualified Data.Aeson.Types as JSON (Parser)
+import qualified Data.Aeson.Types as JSON (Parser, typeMismatch)
 
 import Data.Pool (Pool, destroyAllResources)
 import Database.Persist.Sql (runMigration, runSqlPool)
@@ -89,11 +91,13 @@ parseConnString = JSON.withObject "ConnString" $ \obj -> do
   user <- obj .: "username"
   password <- obj .: "password"
   database <- obj .: "database"
+  host     <- obj .: "host"
   return $
     Text.encodeUtf8
     $ Text.unwords [ "user=" <> user
                    , "password=" <> password
                    , "dbname=" <> database
+                   , "host=" <> host
                    ]
 
 buildDatabasePool :: Etc.Config -> LogFunc -> ComponentM (Pool SqlBackend)
@@ -105,20 +109,25 @@ buildDatabasePool config logFunc = do
 
 runMigrations :: LogFunc -> Pool SqlBackend -> ComponentM ()
 runMigrations logFunc pool =
-  buildComponent_ "database-migrations" $ runSqlPool (runMigration migrateAll) pool
+  buildComponent_ "database-migrations" $ do
+    runSqlPool (runMigration migrateAll) pool
 
 --------------------------------------------------------------------------------
 -- Logging
 
 parseLogHandle :: JSON.Value -> JSON.Parser Handle
-parseLogHandle = JSON.withText "IOHandle" $ \_handleText ->
-  -- TODO: Make sure we parse the text and return the correct handle
-  return stdout
+parseLogHandle = JSON.withText "IOHandle" $ \handleText ->
+  if handleText == "stdout" then
+    return stdout
+  else if handleText == "stderr" then
+    return stderr
+  else
+    JSON.typeMismatch "IOHandle" (JSON.String handleText)
 
 buildLogOptions :: Etc.Config -> IO LogOptions
-buildLogOptions _config = do
-  -- TODO: Get logging out of the config, make sure you use parseLogHandle
-  logOptionsHandle stdout True
+buildLogOptions config = do
+  handle <- Etc.getConfigValueWith parseLogHandle ["logging", "handle"] config
+  logOptionsHandle handle True
 
 buildLogger :: Etc.Config -> ComponentM LogFunc
 buildLogger config = do
@@ -135,6 +144,7 @@ buildApplication = do
   appLogFunc     <- buildLogger config
   appDbPool      <- buildDatabasePool config appLogFunc
 
+  runMigrations appLogFunc appDbPool
   renderedConfig <- Etc.renderConfig config
   liftIO
     $ runRIO appLogFunc $ do
@@ -159,4 +169,4 @@ develMain =
     (traceDisplayIO . display)
     "component-program"
     buildApplication $ \app ->
-      runRIO app $ traceIO "Hello World"
+      runRIO app $ traceIO "HELLO AGAIN"
