@@ -32,7 +32,7 @@ parseToxiproxyInfo name =
   JSON.withObject "ToxproxyInfo" $ \object -> do
      ToxiproxyInfo <$> pure name
                    <*> parseListen object
-                   <*> (object .: "toxins")
+                   <*> (fromMaybe [] <$> (object .:? "toxins"))
   where
     parseListen object = (,) <$> (object .: "host") <*> (object .:? "port")
 
