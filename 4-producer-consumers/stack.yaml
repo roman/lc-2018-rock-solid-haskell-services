@@ -1,9 +1,0 @@
-resolver: lts-11.10
-packages:
-- .
-extra-deps:
-- rio-0.1.2.0
-- componentm-0.0.0.2
-- componentm-devel-0.0.0.2
-- teardown-0.5.0.0
-- capataz-0.2.0.0

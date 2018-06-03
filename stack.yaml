@@ -1,0 +1,31 @@
+resolver: lts-11.10
+packages:
+- 1-small-program
+- 2-config-program
+- 3-component-program
+- 4-producer-consumers
+# this one fails with lts-11.10
+# - 5-web-crawl
+# should probably use git-based references, submodules are confusing
+- vendor/rio/rio
+- vendor/rio/rio-orphans
+
+extra-deps:
+- etc-0.4.0.3
+- componentm-0.0.0.2
+- componentm-devel-0.0.0.2
+- teardown-0.5.0.0
+- capataz-0.2.0.0
+- amazonka-1.6.0
+- amazonka-core-1.6.0
+- amazonka-sqs-1.6.0
+- amazonka-sns-1.6.0
+- typed-process-0.2.2.0
+- unliftio-0.2.7.0
+- toxiproxy-haskell-0.2.1.0
+
+flags:
+  etc:
+    yaml: true
+    cli: true
+    extra: true
