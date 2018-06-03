@@ -22,6 +22,7 @@ dependencies:
 - toxiproxy-haskell
 - servant-client
 - transformers
+- time
 
 - microlens
 - microlens-aeson

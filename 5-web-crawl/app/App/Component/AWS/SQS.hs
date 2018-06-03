@@ -25,13 +25,22 @@ import App.Toxic (ToxiproxyInfo, parseToxiproxyInfo, toxiproxyUrl, buildToxiprox
 import App.Component.AWS.Util (withEndpointUrl)
 import App.Component.AWS.Env (buildEnv, fetchSqsService)
 
+import App.CircuitBreaker (
+    CircuitBreakerState
+  , defaultCircuitBreakerOptions
+  , circuitBreaker
+  )
+
 import Types
 
 --------------------------------------------------------------------------------
 
-buildSqsQueue :: AWS.Env -> Text -> RemoteQueue
+
+buildSqsQueue :: MonadUnliftIO m => AWS.Env -> Text -> m (CircuitBreakerState, RemoteQueue)
 buildSqsQueue env queueUrl = do
-    RemoteQueue { receiveMessages }
+    (status, receiveMessages) <-
+      circuitBreaker defaultCircuitBreakerOptions receiveMessages_
+    return (status, RemoteQueue { receiveMessages })
   where
     deleteMessage receipt = do
       void $ AWS.send $ AWS.deleteMessage queueUrl receipt
@@ -42,7 +51,7 @@ buildSqsQueue env queueUrl = do
       deleteMsg <- pure $ AWS.runResourceT $ AWS.runAWS env $ deleteMessage receipt
       return (RemoteMessage body deleteMsg)
 
-    receiveMessages amount = AWS.runResourceT $ AWS.runAWS env $ do
+    receiveMessages_ amount = AWS.runResourceT $ AWS.runAWS env $ do
         let
           req =
             AWS.receiveMessage queueUrl
@@ -77,7 +86,7 @@ buildToxicQueue proxy queueUrl env = do
           >>= either throwIO (const $ return ()))
 
     withEndpointUrl proxyUrl env $ \toxicEnv ->
-      return $ buildSqsQueue toxicEnv queueUrl
+      liftIO (snd <$> buildSqsQueue toxicEnv queueUrl)
   where
     (Proxy.ProxyName componentName) = Proxy.proxyName proxy
 
@@ -131,7 +140,7 @@ buildQueues config logFn = do
                 $ "Registering queue " <> displayShow queueName
                 <> " with url " <> displayShow queueUrl
 
-            queue <- buildComponent_ queueName $ return $ buildSqsQueue env queueUrl
+            queue <- buildComponent_ queueName (snd <$> buildSqsQueue env queueUrl)
             return (queueName, queue)
 
           Just proxyInfo -> do
