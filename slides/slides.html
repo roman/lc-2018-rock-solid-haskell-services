@@ -30,16 +30,16 @@
 <div class="reveal">
 <div class="slides">
 <section>
-<section id="slide-org6dbe932">
-<h2 id="org6dbe932">Rock-Solid Haskell Services</h2>
+<section id="slide-orgc05d587">
+<h2 id="orgc05d587">Rock-Solid Haskell Services</h2>
 <h4 class="sub-title">LambdaConf 2018 - Boulder, CO</h4>
 <p class="author"><a href="https://twitter.com/romanandreg">Roman Gonzalez</a></p>
 <p class="author"><a href="https://github.com/roman/lc-2018-rock-solid-haskell">https://github.com/roman/lc-2018-rock-solid-haskell</a></p>
 </section>
 </section>
 <section>
-<section id="slide-org8265f67">
-<h2 id="org8265f67">Agenda</h2>
+<section id="slide-orga41a04f">
+<h2 id="orga41a04f">Agenda</h2>
 <ul>
 <li class="fragment fade-in">Introduction/Setup</li>
 <li class="fragment fade-in">Start with a solid foundation (Custom Prelude)</li>
@@ -136,8 +136,8 @@ BLOCK (2 HOURS)
 </section>
 </section>
 <section>
-<section id="slide-org1500355">
-<h2 id="org1500355">Introduction/Setup</h2>
+<section id="slide-org08d8e22">
+<h2 id="org08d8e22">Introduction/Setup</h2>
 <ul>
 <li>Install <a href="https://docs.haskellstack.org/en/stable/install_and_upgrade/">stack</a> or <a href="https://www.haskell.org/cabal/download.html">cabal</a></li>
 <li><a href="https://github.com/Shopify/toxiproxy/releases/tag/v2.1.3">Clone</a> project repository</li>
@@ -149,13 +149,13 @@ BLOCK (2 HOURS)
 </section>
 </section>
 <section>
-<section id="slide-org466c09d">
-<h2 id="org466c09d">Start with a solid foundation</h2>
-<div class="outline-text-2" id="text-org466c09d">
+<section id="slide-org7ea9738">
+<h2 id="org7ea9738">Start with a solid foundation</h2>
+<div class="outline-text-2" id="text-org7ea9738">
 </div>
 </section>
-<section id="slide-org662d635">
-<h3 id="org662d635">Why go with a custom <code>Prelude</code>?</h3>
+<section id="slide-orgdd61c5f">
+<h3 id="orgdd61c5f">Why go with a custom <code>Prelude</code>?</h3>
 <ul>
 <li class="fragment fade-in">Most production Haskell code is built over a set of well known libraries
 (<code>bytestring</code>, <code>text</code>, <code>deepseq</code>, etc.)</li>
@@ -169,8 +169,8 @@ default</li>
 </ul>
 
 </section>
-<section id="slide-org028add7">
-<h3 id="org028add7">What options are available?</h3>
+<section id="slide-org22272cc">
+<h3 id="org22272cc">What options are available?</h3>
 <ul>
 <li>The ones I would recommend are <a href="https://github.com/commercialhaskell/rio"><code>rio</code></a> or <a href="https://github.com/sdiehl/protolude"><code>protolude</code></a></li>
 <li>This workshop will use the <code>rio</code> package</li>
@@ -178,8 +178,8 @@ default</li>
 </ul>
 
 </section>
-<section id="slide-org23e1dd6">
-<h3 id="org23e1dd6">Getting started with RIO</h3>
+<section id="slide-org45e7f0c">
+<h3 id="org45e7f0c">Getting started with RIO</h3>
 <p>
 Go to project <code>1-small-program</code> in the workshop repository
 </p>
@@ -192,22 +192,22 @@ Go through source code, implement a small program that logs stuff
 </aside>
 
 </section>
-<section id="slide-orgaeea94a">
-<h3 id="orgaeea94a">Implement a small program using RIO</h3>
+<section id="slide-orgcf375f8">
+<h3 id="orgcf375f8">Implement a small program using RIO</h3>
 
 </section>
 </section>
 <section>
-<section id="slide-org90e1691">
-<h2 id="org90e1691">Standarizing your team workflow</h2>
-<div class="outline-text-2" id="text-org90e1691">
+<section id="slide-orgb576ae7">
+<h2 id="orgb576ae7">Standarizing your team workflow</h2>
+<div class="outline-text-2" id="text-orgb576ae7">
 </div>
 </section>
-<section id="slide-orgc2bec8a">
-<h3 id="orgc2bec8a">Why to standarize: A tale about CI breakages</h3>
+<section id="slide-org701e0df">
+<h3 id="org701e0df">Why to standarize: A tale about CI breakages</h3>
 </section>
-<section id="slide-org73645c7">
-<h3 id="org73645c7">Makefiles</h3>
+<section id="slide-orge16a3ef">
+<h3 id="orge16a3ef">Makefiles</h3>
 <aside class="notes">
 <p>
 Go to Haskell-capataz to showcase how to use a setup
@@ -215,8 +215,8 @@ Go to Haskell-capataz to showcase how to use a setup
 
 </aside>
 </section>
-<section id="slide-orgfb988bc">
-<h3 id="orgfb988bc">A set of tools to keep code tidy</h3>
+<section id="slide-orga0b7108">
+<h3 id="orga0b7108">A set of tools to keep code tidy</h3>
 <ul>
 <li>hlint</li>
 <li>refactor</li>
@@ -232,8 +232,8 @@ Showcase make/tools
 
 </aside>
 </section>
-<section id="slide-org1bc84f7">
-<h3 id="org1bc84f7"><a id="ID-33bc9bce-064c-48a0-9075-2574b1868060"></a>Fast development using ghcid</h3>
+<section id="slide-org08fda0a">
+<h3 id="org08fda0a"><a id="ID-33bc9bce-064c-48a0-9075-2574b1868060"></a>Fast development using ghcid</h3>
 <div class="org-src-container">
 
 <pre><code class="shell" >make -f make/dev ghcid
@@ -243,18 +243,18 @@ Showcase make/tools
 </section>
 </section>
 <section>
-<section id="slide-orgc17793d">
-<h2 id="orgc17793d">BREAK</h2>
+<section id="slide-org38cbfc1">
+<h2 id="org38cbfc1">BREAK</h2>
 </section>
 </section>
 <section>
-<section id="slide-org4dc1936">
-<h2 id="org4dc1936">Managing configuration values succintly</h2>
-<div class="outline-text-2" id="text-org4dc1936">
+<section id="slide-org2d94e93">
+<h2 id="org2d94e93">Managing configuration values succintly</h2>
+<div class="outline-text-2" id="text-org2d94e93">
 </div>
 </section>
-<section id="slide-org2595c3d">
-<h3 id="org2595c3d">12Factor</h3>
+<section id="slide-org06271fe">
+<h3 id="org06271fe">12Factor</h3>
 <p>
 Ideally you want your application to follow a 12factor mantra
 </p>
@@ -270,8 +270,8 @@ Configuration varies substantially across deploys, code <b>does not</b>
 </p>
 
 </section>
-<section id="slide-orge0eb9c1">
-<h3 id="orge0eb9c1">Strategies to Config</h3>
+<section id="slide-org6470934">
+<h3 id="org6470934">Strategies to Config</h3>
 <ul>
 <li>Configuration File(s)</li>
 <li>Environment Variables</li>
@@ -312,8 +312,8 @@ Point detriments of each of the approaches
 
 </aside>
 </section>
-<section id="slide-org2fab99b">
-<h3 id="org2fab99b">Managing Application Config with <code>etc</code></h3>
+<section id="slide-org1e5edfc">
+<h3 id="org1e5edfc">Managing Application Config with <code>etc</code></h3>
 <ul>
 <li class="fragment fade-in">Supports configuration files, environment variables and CLI options</li>
 
@@ -325,25 +325,24 @@ specificity and provides a unified way to gather them</li>
 
 </ul>
 </section>
-<section id="slide-org33435e0">
-<h3 id="org33435e0">Showcase example</h3>
+<section id="slide-org445c147">
+<h3 id="org445c147">Showcase example</h3>
 </section>
-<section id="slide-orgbcf2e84">
-<h3 id="orgbcf2e84">Exercise</h3>
+<section id="slide-org0dfef27">
+<h3 id="org0dfef27">Exercise</h3>
 <p>
-TODO: Come back here with database binary instructions from the repository
-Implement a program using <code>rio</code> and <code>etc</code> that manages the connection of a database
+Let's do some coding in <code>2-config-program</code>
 </p>
 </section>
 </section>
 <section>
-<section id="slide-org28e63b7">
-<h2 id="org28e63b7">Define your application in layers</h2>
-<div class="outline-text-2" id="text-org28e63b7">
+<section id="slide-org2f1d3a5">
+<h2 id="org2f1d3a5">Define your application in layers</h2>
+<div class="outline-text-2" id="text-org2f1d3a5">
 </div>
 </section>
-<section id="slide-org0115616">
-<h3 id="org0115616">How do I design my app?</h3>
+<section id="slide-org540bf61">
+<h3 id="org540bf61">How do I design my app?</h3>
 <ul>
 <li>Should I just pass parameters for everything and work in <code>IO ()</code>?</li>
 <li>Should I use monad transformers?</li>
@@ -356,8 +355,8 @@ Why not bit of everything? each of them work for a particular
 context of your application
 </p>
 </section>
-<section id="slide-org529c03c">
-<h3 id="org529c03c">Layer 1</h3>
+<section id="slide-org350e519">
+<h3 id="org350e519">Layer 1</h3>
 <p>
 The <code>RIO</code> model, build a <code>ReaderT</code> with an environment
 that contains capabilities for functions:
@@ -384,8 +383,8 @@ Why not StateT?
 
 </aside>
 </section>
-<section id="slide-orgc56a8e3">
-<h3 id="orgc56a8e3">Layer 2</h3>
+<section id="slide-org2144d48">
+<h3 id="org2144d48">Layer 2</h3>
 <p>
 Define contracts on your app environment values
 </p>
@@ -414,20 +413,16 @@ businessMain = do
 </code></pre>
 </div>
 </section>
-<section id="slide-org3cc689a">
-<h3 id="org3cc689a">Layer 3</h3>
+<section id="slide-orgbda08e8">
+<h3 id="orgbda08e8">Layer 3</h3>
 <p>
 This last layer contains functions that receieve all the input parameters as
 values (from layer 2) and performs some transformation or instruction around
 what to do next.
 </p>
-
-<p>
-TODO: Return here when you have a better example
-</p>
 </section>
-<section id="slide-org2e201b9">
-<h3 id="org2e201b9">Layer 0</h3>
+<section id="slide-orgbae3adb">
+<h3 id="orgbae3adb">Layer 0</h3>
 <p>
 Building an environment for your application is not a simple task when using
 ghcid
@@ -442,8 +437,8 @@ new on every change?</li>
 
 </ul>
 </section>
-<section id="slide-org5138960">
-<h3 id="org5138960"><a id="ID-668358df-365a-4225-9e7e-2a808aae1db1"></a>The resource pyramid</h3>
+<section id="slide-orgbd2f035">
+<h3 id="orgbd2f035"><a id="ID-668358df-365a-4225-9e7e-2a808aae1db1"></a>The resource pyramid</h3>
 <div class="org-src-container">
 
 <pre><code class="haskell" >withLogFunc logOptions $ \appLogFunc ->
@@ -454,10 +449,10 @@ new on every change?</li>
 </div>
 
 </section>
-<section id="slide-orgc81ec31">
-<h3 id="orgc81ec31">ComponentM</h3>
+<section id="slide-org2d680a9">
+<h3 id="org2d680a9">ComponentM</h3>
 <p>
-I build a library that:
+A library that:
 </p>
 
 <ul>
@@ -466,22 +461,24 @@ I build a library that:
 <li>Parallelizes the initialization of components</li>
 
 </ul>
+
 </section>
-<section id="slide-org3df42eb">
-<h3 id="org3df42eb">Exercise</h3>
+<section id="slide-org86dfd32">
+<h3 id="org86dfd32">Exercise</h3>
 <p>
-TODO: Come back here
+Lets revisit the config program with componentm
 </p>
+
 </section>
 </section>
 <section>
-<section id="slide-orgcbbf638">
-<h2 id="orgcbbf638">Model sensitive components as reliable processes</h2>
-<div class="outline-text-2" id="text-orgcbbf638">
+<section id="slide-orgb9df685">
+<h2 id="orgb9df685">Model sensitive components as reliable processes</h2>
+<div class="outline-text-2" id="text-orgb9df685">
 </div>
 </section>
-<section id="slide-org73c8c30">
-<h3 id="org73c8c30">Dealing with errors</h3>
+<section id="slide-org047596b">
+<h3 id="org047596b">Dealing with errors</h3>
 <ul>
 <li class="fragment fade-in">What happens when:
 <ul>
@@ -496,16 +493,16 @@ gone?</li>
 
 </ul>
 </section>
-<section id="slide-orge5b8673">
-<h3 id="orge5b8673">Use async/threads (processes) to contain error propagation</h3>
+<section id="slide-org256a911">
+<h3 id="org256a911">Use async/threads (processes) to contain error propagation</h3>
 <ul>
 <li>If exceptions happen in one Process, it won't stop the others</li>
 <li>If Process die, what's next?</li>
 
 </ul>
 </section>
-<section id="slide-org0910aa0">
-<h3 id="org0910aa0">Approach: Have a restarter thread</h3>
+<section id="slide-org71941cd">
+<h3 id="org71941cd">Approach: Have a restarter thread</h3>
 <p>
 Naive approach, implement a restart thread
 </p>
@@ -524,8 +521,8 @@ withRestarter run =
 </div>
 
 </section>
-<section id="slide-org9599e2c">
-<h3 id="org9599e2c">Why is this not ideal?</h3>
+<section id="slide-org6d167c7">
+<h3 id="org6d167c7">Why is this not ideal?</h3>
 <ul>
 <li>Depending on the <code>run</code> sub-routine you may affect other systems, e.g. HTTP request</li>
 <li>There is no limits around how many restarts make sense</li>
@@ -534,8 +531,8 @@ withRestarter run =
 </ul>
 
 </section>
-<section id="slide-orgf3dec4a">
-<h3 id="orgf3dec4a">Using OTP Supervisors</h3>
+<section id="slide-org0f044d9">
+<h3 id="org0f044d9">Using OTP Supervisors</h3>
 <p>
 This technique has been tackled before by Erlang, in specific OTP Supervisors,
 they:
@@ -551,63 +548,64 @@ the failing ones</li>
 </ul>
 
 </section>
-<section id="slide-org710a059">
-<h3 id="org710a059">Worker Restart Strategies</h3>
+<section id="slide-org60b136f">
+<h3 id="org60b136f">Worker Restart Strategies</h3>
 <ul>
-<li><code>Permanent</code>: The supervised process is <i>always</i> restarted on termination</li>
+<li><b><b>Permanent</b></b>: The supervised process is <i>always</i> restarted on termination</li>
 
-<li><code>Transient</code>: The supervised process is restarted on failure only</li>
+<li><b><b>Transient</b></b>: The supervised process is restarted on failure only</li>
 
-<li><code>Temporal</code>: The supervised process is <i>never</i> restarted (<code>forkIO</code> behavior)</li>
+<li><b><b>Temporary</b></b>: The supervised process is <i>never</i> restarted (<code>forkIO</code> behavior)</li>
 
 </ul>
 
 </section>
-<section id="slide-org8cc15a5">
-<h3 id="org8cc15a5">Supervisor Restart Strategies (<code>OneForOne</code>)</h3>
+<section id="slide-orgd4ddacf">
+<h3 id="orgd4ddacf">Supervisor Restart Strategies (<code>OneForOne</code>)</h3>
 <img src="http://learnyousomeerlang.com/static/img/restart-one-for-one.png"></img>
 
 </section>
-<section id="slide-org435030a">
-<h3 id="org435030a">Supervisor Restart Strategies (<code>OneForAll</code>)</h3>
+<section id="slide-org311c17a">
+<h3 id="org311c17a">Supervisor Restart Strategies (<code>OneForAll</code>)</h3>
 <img src="http://learnyousomeerlang.com/static/img/restart-one-for-all.png"></img>
 
 </section>
-<section id="slide-orgf4ff9bb">
-<h3 id="orgf4ff9bb">Examples over code</h3>
+<section id="slide-org7ad84b5">
+<h3 id="org7ad84b5">Examples over code</h3>
 <p>
-TODO
+Go to producer-consumers project in repository
 </p>
 
 </section>
-<section id="slide-org1d00f19">
-<h3 id="org1d00f19">Exercise</h3>
+<section id="slide-org04cacbe">
+<h3 id="org04cacbe">Exercise</h3>
 <p>
-TODO
+Experiment with different strategies for restart in both supervisor and workers
 </p>
+
 </section>
 </section>
 <section>
-<section id="slide-orgbf4cd7e">
-<h2 id="orgbf4cd7e">BREAK</h2>
+<section id="slide-org5acb42a">
+<h2 id="org5acb42a">BREAK</h2>
 </section>
 </section>
 <section>
-<section id="slide-orgd9b0ee1">
-<h2 id="orgd9b0ee1">Dealing with flaky integration points</h2>
-<div class="outline-text-2" id="text-orgd9b0ee1">
+<section id="slide-orgf9a6e06">
+<h2 id="orgf9a6e06">Dealing with flaky integration points</h2>
+<div class="outline-text-2" id="text-orgf9a6e06">
 </div>
 </section>
-<section id="slide-org6fe26c6">
-<h3 id="org6fe26c6">Disclaimer</h3>
+<section id="slide-org52ef449">
+<h3 id="org52ef449">Disclaimer</h3>
 <p>
 This section is heavily inspired by Mike Nygard's excellent "Release It"
 book, if you want to get more details about these concepts, be sure to read
 this book.
 </p>
 </section>
-<section id="slide-org241caef">
-<h3 id="org241caef">Defining impulses and strain</h3>
+<section id="slide-org6cce9aa">
+<h3 id="org6cce9aa">Defining impulses and strain</h3>
 <ul>
 <li><b><b>Impulses</b></b> are rapid shocks to the system (e.g. a DoS attack, black friday
 online sales)</li>
@@ -617,8 +615,8 @@ credit card service)</li>
 
 </ul>
 </section>
-<section id="slide-org140a2d9">
-<h3 id="org140a2d9">Strain manifestations</h3>
+<section id="slide-org04dda97">
+<h3 id="org04dda97">Strain manifestations</h3>
 <ul>
 <li>Unresponsive application</li>
 <li>Slow spike in RAM on web server</li>
@@ -627,8 +625,8 @@ credit card service)</li>
 
 </ul>
 </section>
-<section id="slide-orgf832fa4">
-<h3 id="orgf832fa4">Common terminology</h3>
+<section id="slide-org871ea27">
+<h3 id="org871ea27">Common terminology</h3>
 <ul>
 <li><b><b>Fault</b></b> &#x2013; A condition that creates an incorrect state in your software (bug,
 edge case)</li>
@@ -638,18 +636,17 @@ supposed to</li>
 
 </ul>
 </section>
-<section id="slide-org5b16e71">
-<h3 id="org5b16e71">How cracks propagate</h3>
+<section id="slide-orgb851c31">
+<h3 id="orgb851c31">How cracks propagate</h3>
 <p>
 Triggering a fault opens the crack. Faults become errors, and errors provoke
 failures. That's how the cracks propagate
 </p>
 </section>
-<section id="slide-org42730cb">
-<h3 id="org42730cb">Common sources of strain</h3>
+<section id="slide-orgc18e48c">
+<h3 id="orgc18e48c">Common sources of strain</h3>
 <ul>
 <li>Lack of timeouts on outgoing requests</li>
-<li>Heavy allocation of memory (cache in proc) with no <a href="http://hackage.haskell.org/package/base-4.11.1.0/docs/System-Mem-Weak.html">weak pointers</a> strategies</li>
 <li>Resource pools get drained because of failures on lower layers of the stack</li>
 <li>Resource allocation exaustion, how many open files/ports can your program
 have at a time?</li>
@@ -658,18 +655,17 @@ have at a time?</li>
 
 </ul>
 </section>
-<section id="slide-org7ba6edc">
-<h3 id="org7ba6edc">Timeout</h3>
+<section id="slide-org437fe5d">
+<h3 id="org437fe5d">Timeout</h3>
 <ul>
 <li>Immediately retrying an operation is probably a bad idea; it's likely going
 to fail again. Not often is a "transient error"</li>
 <li>Consider delayed retries (with jitter times)</li>
-<li></li>
 
 </ul>
 </section>
-<section id="slide-org9288ed4">
-<h3 id="org9288ed4">Circuit Breakers</h3>
+<section id="slide-org8971589">
+<h3 id="org8971589">Circuit Breakers</h3>
 <p>
 This abstraction keeps track of a state of a 3rd party system, if the third
 party system fails a number of times, the breaker it's marked as "Open",
@@ -683,13 +679,13 @@ circuit is open, if not the breaker is kept open until the next timeout.
 </p>
 
 </section>
-<section id="slide-org6f2f553">
-<h3 id="org6f2f553">Circuit Breakers</h3>
+<section id="slide-org10567ac">
+<h3 id="org10567ac">Circuit Breakers</h3>
 <img src="./img/circuit_breaker.png"></img>
 
 </section>
-<section id="slide-org031894b">
-<h3 id="org031894b">Mitigation strategies</h3>
+<section id="slide-orgae26be4">
+<h3 id="orgae26be4">Mitigation strategies</h3>
 <ul>
 <li>Timeouts: everytime you are using an allocated resource, use a timeout
 (even on DB connections)</li>
@@ -697,22 +693,20 @@ circuit is open, if not the breaker is kept open until the next timeout.
 <li>When interacting with 3rd party APIs, make sure you use Circuit Breakers to
 fail fast when 3rd party systems are down</li>
 
-<li>When dealing with memory cache, make sure to use Weak Pointers</li>
-
 </ul>
 
 </section>
 </section>
 <section>
-<section id="slide-org03fb5d7">
-<h2 id="org03fb5d7">AWS in your box</h2>
+<section id="slide-org462e533">
+<h2 id="org462e533">AWS in your box</h2>
 <ul>
 <li>We are going to use <a href="https://github.com/localstack/localstack"><code>localstack</code></a> to experiment with SQS and SNS</li>
 
 </ul>
 </section>
-<section id="slide-org6e64aa6">
-<h3 id="org6e64aa6">Install localstack</h3>
+<section id="slide-org21d5b92">
+<h3 id="org21d5b92">Install localstack</h3>
 <p>
 We are going to use localstack, a test/mocking framework for AWS
 applications
@@ -723,22 +717,17 @@ Execute <code>docker-compose up</code> in the cloud-crawler project
 </p>
 
 </section>
-<section id="slide-orgd89f97e">
-<h3 id="orgd89f97e">Anatomy of a crawler application</h3>
+<section id="slide-org3fc0d83">
+<h3 id="org3fc0d83">Anatomy of a crawler application</h3>
 <div class="org-src-container">
 
 <pre><code class="text" >.
-├── crawler_url_topic (sns)
-│   ├── crawler_summary_consumer (sqs)
-│   └── crawler_url_queue (haskell program)
-│       └── consumer
-│           ├── worker-1
-│           └── worker-2
-└── domain_stats_topic (sns)
-    └── domain_stats_consumer (sqs)
-        └── consumer_program (haskell program)
-            ├── worker-1
-            └── worker-2
+└── crawler_url_topic (sns)
+    ├── crawler_summary_consumer (sqs)
+    └── crawler_url_queue (haskell program)
+        └── consumer
+            ├── worker-1
+            └── worker-2
 </code></pre>
 </div>
 
@@ -750,29 +739,29 @@ Execute <code>docker-compose up</code> in the cloud-crawler project
 </section>
 </section>
 <section>
-<section id="slide-orgde18fae">
-<h2 id="orgde18fae">Adding chaos to the mix</h2>
-<div class="outline-text-2" id="text-orgde18fae">
+<section id="slide-org0346c19">
+<h2 id="org0346c19">Adding chaos to the mix</h2>
+<div class="outline-text-2" id="text-org0346c19">
 </div>
 </section>
-<section id="slide-orgb11c7a3">
-<h3 id="orgb11c7a3">Challenge</h3>
+<section id="slide-org69311e3">
+<h3 id="org69311e3">Challenge</h3>
 <p>
 So far we have talked about how to make software less fragile, but how do we
 make sure this is the case?
 </p>
 
 </section>
-<section id="slide-orgb805b65">
-<h3 id="orgb805b65">Innoculate your system</h3>
+<section id="slide-org0b755e8">
+<h3 id="org0b755e8">Innoculate your system</h3>
 <p>
 To test our system recovers succintly after errors we can try building
 components with toxic testing in mind
 </p>
 
 </section>
-<section id="slide-org1bb09df">
-<h3 id="org1bb09df">Toxiproxy</h3>
+<section id="slide-org3a8bac9">
+<h3 id="org3a8bac9">Toxiproxy</h3>
 <p>
 With toxiproxy we can create a controlled miss-behaving proxy that sits in
 the middle between your program and its dependencies, it can:
@@ -788,8 +777,30 @@ the middle between your program and its dependencies, it can:
 </ul>
 
 </section>
-<section id="slide-org2a6cc38">
-<h3 id="org2a6cc38">Adding toxiproxy to the project</h3>
+<section id="slide-orga2eae35">
+<h3 id="orga2eae35">Lets explore how to include toxiproxy in our project</h3>
+
+</section>
+<section id="slide-org9b0df2e">
+<h3 id="org9b0df2e">How does it work?</h3>
+<img src="./img/Toxiproxy.png"></img>
+</section>
+</section>
+<section>
+<section id="slide-org6144e46">
+<h2 id="org6144e46">That's all for today!</h2>
+<p>
+Thanks for attending 👋
+</p>
+
+<p>
+Keep in touch!
+</p>
+
+<p>
+<a href="https://twitter.com/romanandreg">https://twitter.com/romanandreg</a>
+<a href="https://github.com/roman">https://github.com/roman</a>
+</p>
 </section>
 </section>
 </div>

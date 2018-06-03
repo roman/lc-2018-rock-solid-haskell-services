@@ -9,7 +9,7 @@
 * Rock-Solid Haskell Services
 #+REVEAL_HTML: <h4 class="sub-title">LambdaConf 2018 - Boulder, CO</h4>
 #+REVEAL_HTML: <p class="author"><a href="https://twitter.com/romanandreg">Roman Gonzalez</a></p>
-#+REVEAL_HTML: <p class="author"><a href="https://github.com/roman/lc-2018-rock-solid-haskell">https://github.com/roman/lc-2018-rock-solid-haskell</a></p>
+#+REVEAL_HTML: <p class="author"><a href="https://github.com/roman/lc-2018-rock-solid-haskell-services">https://github.com/roman/lc-2018-rock-solid-haskell-services</a></p>
 * Agenda
 #+ATTR_REVEAL: :frag (fade-in)
 - Introduction/Setup
@@ -88,7 +88,7 @@ BLOCK (2 HOURS)
 
 ** Getting started with RIO
 
-Go to project ~1-small-program~ in the workshop repository
+Go to project [[https://github.com/roman/lc-2018-rock-solid-haskell-services/tree/master/1-small-program][~1-small-program~]] in the workshop repository
 
 #+BEGIN_NOTES
 Go through source code, implement a small program that logs stuff
@@ -163,7 +163,7 @@ Point detriments of each of the approaches
      specificity and provides a unified way to gather them
 ** Showcase example
 ** Exercise
-   Let's do some coding in ~2-config-program~
+   Let's do some coding in [[https://github.com/roman/lc-2018-rock-solid-haskell-services/tree/master/2-config-program][~2-config-program~]]
 * Define your application in layers
 ** How do I design my app?
 
@@ -245,13 +245,16 @@ Point detriments of each of the approaches
 
 ** ComponentM
 
-   I build a library that:
+   A library that:
 
    * Composes components together with cleanup semantics
    * Manages setup/teardown on failures on initialization or teardown
    * Parallelizes the initialization of components
+
 ** Exercise
-   TODO: Come back here
+
+   Lets revisit the config program with componentm
+
 * Model sensitive components as reliable processes
 ** Dealing with errors
    #+ATTR_REVEAL: :frag (fade-in)
@@ -348,7 +351,6 @@ they:
    failures. That's how the cracks propagate
 ** Common sources of strain
    - Lack of timeouts on outgoing requests
-   - Heavy allocation of memory (cache in proc) with no [[http://hackage.haskell.org/package/base-4.11.1.0/docs/System-Mem-Weak.html][weak pointers]] strategies
    - Resource pools get drained because of failures on lower layers of the stack
    - Resource allocation exaustion, how many open files/ports can your program
      have at a time?
@@ -379,8 +381,6 @@ they:
    - When interacting with 3rd party APIs, make sure you use Circuit Breakers to
      fail fast when 3rd party systems are down
 
-   - When dealing with memory cache, make sure to use Weak Pointers
-
 * AWS in your box
 - We are going to use [[https://github.com/localstack/localstack][~localstack~]] to experiment with SQS and SNS
 ** Install localstack
@@ -394,17 +394,12 @@ they:
 
 #+BEGIN_SRC text
 .
-├── crawler_url_topic (sns)
-│   ├── crawler_summary_consumer (sqs)
-│   └── crawler_url_queue (haskell program)
-│       └── consumer
-│           ├── worker-1
-│           └── worker-2
-└── domain_stats_topic (sns)
-    └── domain_stats_consumer (sqs)
-        └── consumer_program (haskell program)
-            ├── worker-1
-            └── worker-2
+└── crawler_url_topic (sns)
+    ├── crawler_summary_consumer (sqs)
+    └── crawler_url_queue (haskell program)
+        └── consumer
+            ├── worker-1
+            └── worker-2
 #+END_SRC
 
 - Crawler worker pushes to domain stats worker
@@ -429,4 +424,16 @@ they:
    - Delay closing TCP connections
    - Add big variation to TPC packets sizes and delays them
 
-** Adding toxiproxy to the project
+** Lets explore how to include toxiproxy in our project
+
+** How does it work?
+
+#+REVEAL_HTML: <img src="./img/Toxiproxy.png"></img>
+* That's all for today!
+
+Thanks for attending 👋
+
+Keep in touch!
+
+- https://twitter.com/romanandreg
+- https://github.com/roman
