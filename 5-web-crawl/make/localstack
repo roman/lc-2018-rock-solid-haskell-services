@@ -1,0 +1,9 @@
+setup: ## Create project queues and topics on localstack instance (idempotent)
+	aws --endpoint http://localhost:4576 sqs create-queue --queue-name queue1 || true
+	aws --endpoint http://localhost:4576 sqs create-queue --queue-name queue2 || true
+.PHONY: setup
+
+help:	## Display this message
+	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
+.PHONY: help
+.DEFAULT_GOAL := help
