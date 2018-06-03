@@ -6,6 +6,11 @@ etc/files:
   - ./usr/local/etc/production.yaml
 
 etc/entries:
+  crawler:
+    url-queue-name: "queue1"
+    url-topic-name: "topic1"
+    worker-count: 3
+
   logger:
     level:
       etc/spec:
@@ -39,19 +44,22 @@ etc/entries:
         env: AWS_SECRET_ACCESS_KEY
 
     sns:
+      topics:
+        etc/spec:
+          type: '[object]'
+          default: []
+
       endpoint:
         etc/spec:
           default: null
           type: string
           env: APP_SNS_ENDPOINT
+
     sqs:
       queues:
         etc/spec:
           type: '[object]'
-          default:
-          - name: queue1
-            url: http://localhost:4576/queue/queue1
-            toxics: []
+          default: []
 
       timeout_seconds:
         etc/spec:

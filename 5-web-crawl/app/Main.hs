@@ -4,8 +4,9 @@
 module Main (main) where
 
 import RIO
+import Capataz
 
-import App.Component (appComponent)
+import App.Component (buildAppComponent)
 import Control.Monad.Component (runComponentM)
 
 import Types
@@ -13,20 +14,13 @@ import Types
 run :: RIO App ()
 run = do
   logInfo "In Run module"
-  forever $ do
-    withRemoteQueue "queue1" $ \queue -> do
-      messages <- liftIO $ receiveMessages queue
-      if null messages then
-        logInfo "No messages found"
-      else do
-        mapM_ (logInfo . display) messages
-        mapM_ (liftIO . deleteRemoteMsg) messages
-    -- delay for 30 seconds
-    threadDelay 5000100
+  streamQueue "queue1" 5 1000100 $ \items -> do
+    mapM_ (logInfo . display) items
+    mapM_ (liftIO . deleteRemoteMsg) items
 
 main :: IO ()
 main =
   runComponentM
-    "stage-zero"
-    appComponent
-    (\app -> runRIO app run)
+    "web-crawler"
+    buildAppComponent
+    (\(app, capataz) -> runRIO app (joinCapatazThread capataz))

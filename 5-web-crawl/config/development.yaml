@@ -4,13 +4,18 @@ logger:
 aws:
   access_key: "00000000000000000000"
   secret_key: "0000000000000000000000000000000000000000"
+  sns:
+    endpoint: "http://localhost:4575"
+    topics:
+    - name: "topic1"
+      arn: "arn:aws:sns:us-east-1:123456789012:topic1"
   sqs:
-    endpoint: http://localhost:4576
+    endpoint: "http://localhost:4576"
     queues:
-    - name: queue1
-      url: http://localhost:4576/queue/queue1
+    - name: "queue1"
+      url: "http://localhost:4576/queue/queue1"
       toxic:
-        host: localhost
+        host: "0.0.0.0"
         port: 5001
         # toxins:
         # - name: "delay_request_upstream"
@@ -19,5 +24,3 @@ aws:
         #   toxicity: 1
         #   attributes:
         #     latency: 10000
-    - name: queue2
-      url: http://localhost:4576/queue/queue2

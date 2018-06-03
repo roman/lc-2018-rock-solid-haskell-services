@@ -14,12 +14,37 @@ dependencies:
 - network-uri
 - amazonka >= 1.5.0
 - amazonka-sqs >= 1.5.0
+- amazonka-sns >= 1.5.0
 - network
+- http-client
+- http-client-tls
+- http-types
 - toxiproxy-haskell
 - servant-client
 - transformers
+
+- microlens
+- microlens-aeson
 
 executables:
   web-crawler:
     source-dirs: app
     main: Main.hs
+    ghc-options:
+    - -threaded
+    - -O1
+    dependencies:
+    - web-crawl
+
+library:
+  source-dirs: src
+  exposed-modules:
+  - Crawler
+  - Types
+  dependencies:
+  - network-uri
+  - http-client
+  - http-client-tls
+  - http-types
+  - HandsomeSoup
+  - hxt

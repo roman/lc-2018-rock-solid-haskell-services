@@ -4,3 +4,6 @@
 [submodule "5-web-crawl/vendor/rio"]
 	path = 5-web-crawl/vendor/rio
 	url = https://github.com/commercialhaskell/rio
+[submodule "5-web-crawl/vendor/capataz"]
+	path = 5-web-crawl/vendor/capataz
+	url = https://github.com/roman/Haskell-capataz

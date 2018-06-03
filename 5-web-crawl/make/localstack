@@ -1,7 +1,32 @@
+SQS_HOST := http://localhost:4576
+SQS_BIN := aws --endpoint $(SQS_HOST) sqs
+
+TOPIC_ARN := arn:aws:sns:us-east-1:123456789012:topic1
+SNS_HOST := http://localhost:4575
+SNS_BIN := aws --endpoint $(SNS_HOST) sns
+
 setup: ## Create project queues and topics on localstack instance (idempotent)
-	aws --endpoint http://localhost:4576 sqs create-queue --queue-name queue1 || true
-	aws --endpoint http://localhost:4576 sqs create-queue --queue-name queue2 || true
+	$(SQS_BIN) create-queue --queue-name queue1 || true
+	$(SQS_BIN) create-queue --queue-name queue2 || true
+	$(SNS_BIN) create-topic --name topic1 || true
+	$(SNS_BIN) subscribe --topic-arn $(TOPIC_ARN) --protocol sqs --notification-endpoint "arn:aws:sqs:elasticmq:000000000000:queue1" || true
 .PHONY: setup
+
+purge-queues: ## Purge queue
+	$(SQS_BIN) purge-queue --queue-url $(SQS_HOST)/queue/queue1
+
+list-queues: ## List queues created in localstack
+	$(SQS_BIN) list-queues
+.PHONY: list-queues
+
+list-subscriptions: ## List all subscriptions created in localstack
+	$(SNS_BIN) list-subscriptions
+.PHONY: list-topics
+
+# $(SQS_BIN) send-message --queue-url $(SQS_HOST)/queue/queue1 --message-body '{"hello": "world"}'
+send-test-message: ## Sends a test message to the queues
+	$(SNS_BIN) publish --topic-arn $(TOPIC_ARN) --message "{\"url\": \"http://www.parsonsmatt.org/\"}"
+.PHONY: send-test-message
 
 help:	## Display this message
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
