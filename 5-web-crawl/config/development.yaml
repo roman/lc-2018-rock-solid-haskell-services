@@ -1,0 +1,23 @@
+logger:
+  verbose: true
+
+aws:
+  access_key: "00000000000000000000"
+  secret_key: "0000000000000000000000000000000000000000"
+  sqs:
+    endpoint: http://localhost:4576
+    queues:
+    - name: queue1
+      url: http://localhost:4576/queue/queue1
+      toxic:
+        host: localhost
+        port: 5001
+        # toxins:
+        # - name: "delay_request_upstream"
+        #   type: "latency"
+        #   stream: "upstream"
+        #   toxicity: 1
+        #   attributes:
+        #     latency: 10000
+    - name: queue2
+      url: http://localhost:4576/queue/queue2
