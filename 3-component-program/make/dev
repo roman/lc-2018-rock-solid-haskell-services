@@ -1,4 +1,4 @@
-TOOLS_DIR ?= $$HOME/.local/bin
+TOOLS_DIR ?= $(HOME)/.local/bin
 GHCID_BIN := $(TOOLS_DIR)/ghcid
 
 
